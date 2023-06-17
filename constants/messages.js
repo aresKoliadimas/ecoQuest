@@ -1,0 +1,6 @@
+export const BUILD_HOUSE =
+  "You want to build the house. Select the material to use:\n\nWood\nRock\nConcrete";
+export const ROCK_UNSUSTAINABLE =
+  "Rock is unsustainable as a construction material due to environmental degradation during extraction, non-renewable nature, high energy consumption in transportation, and waste generation during processing. Adopting alternative materials and sustainable practices is crucial for a more environmentally friendly future.";
+export const CONCRETE_UNSUSTAINABLE =
+  "Concrete is considered unsustainable due to several reasons. Firstly, its production requires large amounts of energy and emits significant carbon dioxide, contributing to greenhouse gas emissions and climate change. Additionally, the extraction of raw materials for concrete, such as limestone and sand, leads to habitat destruction and loss of biodiversity. Moreover, the production and use of concrete result in substantial water consumption, depleting water resources in many regions. Lastly, concrete structures have a limited lifespan and are often difficult to recycle, leading to significant waste generation. These combined factors make concrete an unsustainable solution in the context of environmental impact, resource depletion, and long-term sustainability.";
