@@ -1,19 +1,16 @@
-// Initialize the Phaser game
+import FirstLevel from "./first-level/first-level";
+
 const config = {
   type: Phaser.AUTO,
-  width: 800,
+  width: 900,
   height: 600,
-  backgroundColor: "#333333",
-  scene: {
-    preload: preload,
-    create: create,
-    update: update,
-  },
+  backgroundColor: "#880808",
+  parent: "ecoQuest",
+  scene: [FirstLevel],
 };
 
 const game = new Phaser.Game(config);
 
-// Global variables
 let woodCount = 0;
 let rockCount = 0;
 let houseBuilt = false;
@@ -25,7 +22,7 @@ let pointsText;
 
 // Preload assets
 function preload() {
-  // Load assets
+  this.preload.atlas;
 }
 
 // Create the game scene
