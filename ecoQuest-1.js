@@ -19,6 +19,8 @@ let houseBuilt = false;
 let player;
 let woodText;
 let rockText;
+let points = 0;
+let pointsText;
 
 // Preload assets
 function preload() {
@@ -34,12 +36,14 @@ function create() {
   player.setCollideWorldBounds(true);
 
   // Create the resource objects (wood and rock)
-  const wood = this.physics.add.sprite(200, 300, "wood");
-  const rock = this.physics.add.sprite(600, 300, "rock");
+  const trees = this.physics.add.group({
+    key: "tree",
+    repeat: 9,
+    setXY: { x: 100, y: 100, stepX: 70 },
+  });
 
   // Enable overlap with the player for resource objects
-  this.physics.add.overlap(player, wood, collectWood, null, this);
-  this.physics.add.overlap(player, rock, collectRock, null, this);
+  this.physics.add.overlap(player, trees, cutTree, null, this);
 
   // Create text for resource counters
   woodText = this.add.text(16, 16, "Wood: 0", {
@@ -47,6 +51,12 @@ function create() {
     fill: "#000",
   });
   rockText = this.add.text(16, 56, "Rock: 0", {
+    fontSize: "32px",
+    fill: "#000",
+  });
+
+  // Create text for points
+  pointsText = this.add.text(16, 96, "Points: 0", {
     fontSize: "32px",
     fill: "#000",
   });
@@ -75,16 +85,14 @@ function update() {
     player.setVelocityY(0);
   }
 
-  // Mining resources
-  if (Phaser.Input.Keyboard.JustDown(spacebar)) {
-    const nearbyWood = woodCount === 0 && checkOverlap(player, wood);
-    const nearbyRock = rockCount === 0 && checkOverlap(player, rock);
+  // Build house if conditions are met
+  if (woodCount >= 10 && !houseBuilt) {
+    showBuildPopup();
+  }
 
-    if (nearbyWood) {
-      collectWood();
-    } else if (nearbyRock) {
-      collectRock();
-    }
+  // Move to next level based on points
+  if (points >= 100) {
+    moveToNextLevel();
   }
 }
 
@@ -96,30 +104,52 @@ function checkOverlap(spriteA, spriteB) {
   return Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB);
 }
 
-// Function to collect wood
-function collectWood() {
-  woodCount++;
-  wood.destroy();
-  woodText.setText("Wood: " + woodCount);
+// Function to cut trees and gather wood
+function cutTree(player, tree) {
+  if (woodCount < 10 && !houseBuilt) {
+    woodCount++;
+    tree.destroy();
+    woodText.setText("Wood: " + woodCount);
 
-  checkBuildHouse();
-}
-
-// Function to collect rock
-function collectRock() {
-  rockCount++;
-  rock.destroy();
-  rockText.setText("Rock: " + rockCount);
-
-  checkBuildHouse();
-}
-
-// Function to build the house
-function checkBuildHouse() {
-  if (woodCount >= 5 && rockCount >= 3 && !houseBuilt) {
-    houseBuilt = true;
-    // Add house sprite and any other visual indicators
-
-    // Add house completion message or trigger next level
+    if (woodCount >= 10) {
+      showBuildPopup();
+    }
   }
+}
+
+// Function to show the build popup
+function showBuildPopup() {
+  const buildPopup = window.confirm(
+    "You have enough wood to build the house. Select the material to use:\n\nWood\nRock"
+  );
+  if (buildPopup) {
+    const selectedMaterial = buildPopup.toLowerCase();
+    if (selectedMaterial === "wood") {
+      buildHouseWithWood();
+    } else if (selectedMaterial === "rock") {
+      deductPointsAndShowText();
+    }
+  }
+}
+
+// Function to build the house with wood
+function buildHouseWithWood() {
+  houseBuilt = true;
+  // Add house sprite and any other visual indicators
+
+  // Add house completion message or trigger next level
+}
+
+// Function to deduct points and show text
+function deductPointsAndShowText() {
+  rockCount++;
+  points -= 50;
+  rockText.setText("Rock: " + rockCount);
+  pointsText.setText("Points: " + points);
+  // Show text informing the player about the unsustainability of rock material
+}
+
+// Function to move to the next level
+function moveToNextLevel() {
+  // Proceed to the next level or trigger any required actions
 }
