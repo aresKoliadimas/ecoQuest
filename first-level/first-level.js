@@ -25,13 +25,20 @@ let worldText;
 
 function preload() {
   console.log("preload");
+  this.load.image("world1", "first-level/assets/images/world1Tileset.png");
+  this.load.tilemapTiledJSON("map1", "first-level/assets/images/map1.json");
+  this.load.atlas(
+    "player",
+    "first-level/assets/images/player.png",
+    "first-level/assets/images/player_atlas.json"
+  );
 }
 
-// Create the game scene
 function create() {
-  // Add the background image
-
-  // Create the player character
+  const map1 = this.make.tilemap({ key: "map1" });
+  const world1Tileset = map1.addTilesetImage("tileset", "world1", 60, 40, 0, 0);
+  const layer1 = map1.createLayer("Tile Layer 1", world1Tileset, 0, 0);
+  const layer2 = map1.createLayer("Tile Layer 2", world1Tileset, 0, 0);
   player = this.physics.add.sprite(400, 300, "player");
   player.setCollideWorldBounds(true);
 
