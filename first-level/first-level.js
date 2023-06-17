@@ -28,13 +28,11 @@ let spacebar;
 let woodCount = 0;
 let houseBuilt = false;
 let player;
-let woodText;
 let woods;
 let points = 0;
 let pointsText;
 let currentWorld = 1;
 let nextLevelPoints = 100;
-let worldText;
 
 function preload() {
   this.load.image("world1", "first-level/assets/images/world1Tileset.png");
@@ -48,15 +46,22 @@ function preload() {
 
 function create() {
   const map1 = this.make.tilemap({ key: "map1" });
-  const world1Tileset = map1.addTilesetImage("world1Tileset", "world1",32,32,0,0);
+  const world1Tileset = map1.addTilesetImage(
+    "world1Tileset",
+    "world1",
+    32,
+    32,
+    0,
+    0
+  );
   map1.createLayer("Tile Layer 1", world1Tileset, 0, 0);
   map1.createLayer("Tile Layer 2", world1Tileset, 0, 0);
-  player = this.physics.add.sprite(400, 300, "player");
+  player = this.physics.add.sprite(256, 256, "player");
   player.setCollideWorldBounds(true);
 
   const trees = this.physics.add.group({
     key: "tree",
-    repeat: 9,
+    repeat: 5,
     setXY: {
       x: 50,
       y: Phaser.Math.RND.between(100, this.sys.canvas.height / 4),
@@ -69,18 +74,8 @@ function create() {
     overlapOnly: true,
   });
 
-  woodText = this.add.text(16, 16, "Wood: 0", {
-    fontSize: "32px",
-    fill: "#000",
-  });
-
-  pointsText = this.add.text(16, 96, "Points: 0", {
-    fontSize: "32px",
-    fill: "#000",
-  });
-
-  worldText = this.add.text(16, 136, "World: " + currentWorld, {
-    fontSize: "32px",
+  pointsText = this.add.text(17, 17, "Points: 0", {
+    fontSize: "15px",
     fill: "#000",
   });
 
@@ -120,7 +115,6 @@ function cutTree(player, tree) {
   if (woodCount < 10 && !houseBuilt) {
     woodCount++;
     tree.disableBody(true, true);
-    woodText.setText("Wood: " + woodCount);
 
     const wood = woods.create(tree.x, tree.y, "wood");
     wood.setOrigin(0.5);
