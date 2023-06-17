@@ -48,7 +48,7 @@ function preload() {
 
 function create() {
   const map1 = this.make.tilemap({ key: "map1" });
-  const world1Tileset = map1.addTilesetImage("tileset", "world1");
+  const world1Tileset = map1.addTilesetImage("world1Tileset", "world1",32,32,0,0);
   map1.createLayer("Tile Layer 1", world1Tileset, 0, 0);
   map1.createLayer("Tile Layer 2", world1Tileset, 0, 0);
   player = this.physics.add.sprite(400, 300, "player");
