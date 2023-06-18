@@ -1,4 +1,4 @@
-import firstLevel from "./first-level/first-level.js";
+import FirstLevel from "./first-level/first-level.js";
 
 const config = {
   type: Phaser.AUTO,
@@ -10,7 +10,7 @@ const config = {
       gravity: { y: 0 },
     },
   },
-  scene: [firstLevel],
+  scene: [FirstLevel],
   scale: {
     zoom: 1.4,
   },
