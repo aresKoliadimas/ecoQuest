@@ -4,41 +4,46 @@ import {
   BUILD_HOUSE,
 } from "../constants/messages.js";
 
-export default class firstLevel extends Phaser.Scene {
-  cursors;
-  spacebar;
-  houseBuilt = false;
-  player;
-  woods;
-  points = 0;
-  pointsText;
-  nextLevelPoints = 100;
-
+export default class FirstLevel extends Phaser.Scene {
   constructor() {
     super("firstLevel");
+    this.cursors = null;
+    this.spacebar = null;
+    this.houseBuilt = false;
+    this.player = null;
+    this.woods = null;
+    this.points = 0;
+    this.pointsText = null;
+    this.nextLevelPoints = 100;
   }
 
   preload() {
-    this.load.image("world1", "first-level/assets/images/world1Tileset.png");
-    this.load.tilemapTiledJSON("map1", "first-level/assets/images/map1.json");
+    this.load.image(
+      "firstLevelTilesetImage",
+      "first-level/assets/images/firstLevelTileset.png"
+    );
+    this.load.tilemapTiledJSON(
+      "firstLevelTilemap",
+      "first-level/assets/images/firstLevelTilemap.json"
+    );
     this.load.atlas("player", "shared/player.png", "shared/player_atlas.json");
     this.load.json("player_animation", "shared/player_animation.json");
   }
 
   create() {
-    const animData = this.cache.json.get("player_animation");
-    this.anims.fromJSON(animData);
-    const map1 = this.make.tilemap({ key: "map1" });
-    const world1Tileset = map1.addTilesetImage(
-      "world1Tileset",
-      "world1",
+    const playerAnimation = this.cache.json.get("player_animation");
+    this.anims.fromJSON(playerAnimation);
+    const firstLevelTilemap = this.make.tilemap({ key: "firstLevelTilemap" });
+    const firstLevelTileset = firstLevelTilemap.addTilesetImage(
+      "firstLevelTileset",
+      "firstLevelTilesetImage",
       32,
       32,
       0,
       0
     );
-    map1.createLayer("Tile Layer 1", world1Tileset, 0, 0);
-    map1.createLayer("Tile Layer 2", world1Tileset, 0, 0);
+    firstLevelTilemap.createLayer("Tile Layer 1", firstLevelTileset, 0, 0);
+    firstLevelTilemap.createLayer("Tile Layer 2", firstLevelTileset, 0, 0);
     this.player = this.physics.add.sprite(
       256,
       256,
@@ -73,6 +78,34 @@ export default class firstLevel extends Phaser.Scene {
     );
   }
 
+  update() {
+    this.player.anims.play("walk", true);
+    this.move();
+
+    if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {
+      const treeLayer = this.map.getLayer("Tile Layer 2");
+      const treeTile = treeLayer.getTileAtWorldXY(
+        this.player.x,
+        this.player.y,
+        true
+      );
+
+      if (treeTile && treeTile.index !== -1) {
+        this.cutTree(treeTile);
+      }
+    }
+
+    // TODO: add condition to check if player is in the correct location
+    if (this.woodCount >= 10 && !this.houseBuilt) {
+      this.showBuildPopup();
+    }
+
+    // TODO: add condition to check if player is in the correct location
+    if (this.points >= this.nextLevelPoints) {
+      this.moveToNextLevel();
+    }
+  }
+
   move() {
     let velocityX = 0;
     let velocityY = 0;
@@ -88,6 +121,7 @@ export default class firstLevel extends Phaser.Scene {
     } else if (this.cursors.down.isDown) {
       velocityY = 160;
     }
+
     const magnitude = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
     if (magnitude > 0) {
       velocityX /= magnitude;
@@ -98,48 +132,22 @@ export default class firstLevel extends Phaser.Scene {
     this.player.setVelocityY(velocityY * 160);
   }
 
-  update() {
-    this.player.anims.play("walk", true);
-    this.move();
-
-    if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {
-      const treeTile = map1.getTileAtWorldXY(
-        player.x,
-        player.y,
-        true,
-        treeLayer
-      );
-      if (treeTile && treeTile.index !== -1) {
-        cutTree(treeTile);
-      }
-    }
-
-    // TODO: add condition to check if player is in the correct location
-    if (this.woodCount >= 10 && !houseBuilt) {
-      showBuildPopup();
-    }
-
-    // TODO: add condition to check if player is in the correct location
-    if (this.points >= this.nextLevelPoints) {
-      moveToNextLevel();
-    }
-  }
-
   cutTree(treeTile) {
-    const treeX = treeTile.pixelX + treeLayer.x;
-    const treeY = treeTile.pixelY + treeLayer.y;
+    const treeX = treeTile.pixelX + treeTile.tilemapLayer.x;
+    const treeY = treeTile.pixelY + treeTile.tilemapLayer.y;
 
-    const log = logs.create(treeX, treeY, "log");
+    const log = this.woods.create(treeX, treeY, "log");
     log.setOrigin(0, 1); // Adjust the origin to the bottom-left corner
     log.body.setSize(32, 32);
     log.body.setCircle(16);
     log.body.setOffset(0, 0);
 
     // Remove the tree tile
-    treeLayer.removeTileAt(treeTile.x, treeTile.y);
+    treeTile.tilemapLayer.removeTileAt(treeTile.x, treeTile.y);
 
     // Increment wood count
-    woodCount++;
+    this.points++;
+    this.pointsText.setText("Points: " + this.points);
   }
 
   showBuildPopup() {
@@ -150,12 +158,14 @@ export default class firstLevel extends Phaser.Scene {
 
       switch (material) {
         case "wood":
-          buildHouseWithWood();
+          this.buildHouseWithWood();
           break;
         case "rock":
-          deductPointsAndShowText(ROCK_UNSUSTAINABLE);
+          this.deductPointsAndShowText(ROCK_UNSUSTAINABLE);
+          break;
         case "concrete":
-          deductPointsAndShowText(CONCRETE_UNSUSTAINABLE);
+          this.deductPointsAndShowText(CONCRETE_UNSUSTAINABLE);
+          break;
         default:
           break;
       }
@@ -163,14 +173,14 @@ export default class firstLevel extends Phaser.Scene {
   }
 
   buildHouseWithWood() {
-    houseBuilt = true;
-    //TODO: Add house sprite
+    this.houseBuilt = true;
+    // TODO: Add house sprite
   }
 
   deductPointsAndShowText(message) {
-    points = points ? points - 5 : 0;
-    pointsText.setText("Points: " + points);
-    showMessage(message);
+    this.points = this.points >= 5 ? this.points - 5 : 0;
+    this.pointsText.setText("Points: " + this.points);
+    this.showMessage(message);
   }
 
   showMessage(message) {
@@ -188,6 +198,6 @@ export default class firstLevel extends Phaser.Scene {
   }
 
   moveToNextLevel() {
-    //TODO: Proceed to the next level or trigger any required actions
+    // TODO: Proceed to the next level or trigger any required actions
   }
 }
