@@ -5,16 +5,17 @@ import {
 } from "../constants/messages.js";
 
 export default class FirstLevel extends Phaser.Scene {
+  cursors = null;
+  spacebar = null;
+  houseBuilt = false;
+  player = null;
+  woods = null;
+  points = 0;
+  pointsText = null;
+  nextLevelPoints = 100;
+
   constructor() {
     super("firstLevel");
-    this.cursors = null;
-    this.spacebar = null;
-    this.houseBuilt = false;
-    this.player = null;
-    this.woods = null;
-    this.points = 0;
-    this.pointsText = null;
-    this.nextLevelPoints = 100;
   }
 
   preload() {
