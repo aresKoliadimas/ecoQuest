@@ -1,64 +1,12 @@
 {
     "frames": [
         {
-            "filename": "townsfolk_f_walk_1",
-            "frame": {
-                "w": 32,
-                "h": 32,
-                "x": 0,
-                "y": 0
-            },
-            "anchor": {
-                "x": 0.5,
-                "y": 0.5
-            }
-        },
-        {
-            "filename": "townsfolk_f_walk_2",
-            "frame": {
-                "w": 32,
-                "h": 32,
-                "x": 32,
-                "y": 0
-            },
-            "anchor": {
-                "x": 0.5,
-                "y": 0.5
-            }
-        },
-        {
-            "filename": "townsfolk_f_walk_3",
-            "frame": {
-                "w": 32,
-                "h": 32,
-                "x": 0,
-                "y": 32
-            },
-            "anchor": {
-                "x": 0.5,
-                "y": 0.5
-            }
-        },
-        {
-            "filename": "townsfolk_f_walk_4",
-            "frame": {
-                "w": 32,
-                "h": 32,
-                "x": 32,
-                "y": 32
-            },
-            "anchor": {
-                "x": 0.5,
-                "y": 0.5
-            }
-        },
-        {
             "filename": "townsfolk_f_idle_1",
             "frame": {
                 "w": 32,
                 "h": 32,
-                "x": 64,
-                "y": 0
+                "x": 1,
+                "y": 1
             },
             "anchor": {
                 "x": 0.5,
@@ -70,8 +18,8 @@
             "frame": {
                 "w": 32,
                 "h": 32,
-                "x": 64,
-                "y": 32
+                "x": 34,
+                "y": 1
             },
             "anchor": {
                 "x": 0.5,
@@ -83,8 +31,8 @@
             "frame": {
                 "w": 32,
                 "h": 32,
-                "x": 0,
-                "y": 64
+                "x": 1,
+                "y": 34
             },
             "anchor": {
                 "x": 0.5,
@@ -96,8 +44,60 @@
             "frame": {
                 "w": 32,
                 "h": 32,
-                "x": 32,
-                "y": 64
+                "x": 34,
+                "y": 34
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "townsfolk_f_walk_2",
+            "frame": {
+                "w": 32,
+                "h": 32,
+                "x": 67,
+                "y": 1
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "townsfolk_f_walk_3",
+            "frame": {
+                "w": 32,
+                "h": 32,
+                "x": 67,
+                "y": 34
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "townsfolk_f_walk_4",
+            "frame": {
+                "w": 32,
+                "h": 32,
+                "x": 1,
+                "y": 67
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "townsfolk_f_walk_1",
+            "frame": {
+                "w": 32,
+                "h": 32,
+                "x": 34,
+                "y": 67
             },
             "anchor": {
                 "x": 0.5,

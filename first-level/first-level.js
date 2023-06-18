@@ -31,20 +31,18 @@ let player;
 let woods;
 let points = 0;
 let pointsText;
-let currentWorld = 1;
 let nextLevelPoints = 100;
 
 function preload() {
   this.load.image("world1", "first-level/assets/images/world1Tileset.png");
   this.load.tilemapTiledJSON("map1", "first-level/assets/images/map1.json");
-  this.load.atlas(
-    "player",
-    "first-level/assets/images/player.png",
-    "first-level/assets/images/player_atlas.json"
-  );
+  this.load.atlas("player", "shared/player.png", "shared/player_atlas.json");
+  this.load.json("player_animation", "shared/player_animation.json");
 }
 
 function create() {
+  const animData = this.cache.json.get("player_animation");
+  this.anims.fromJSON(animData);
   const map1 = this.make.tilemap({ key: "map1" });
   const world1Tileset = map1.addTilesetImage(
     "world1Tileset",
@@ -56,7 +54,7 @@ function create() {
   );
   map1.createLayer("Tile Layer 1", world1Tileset, 0, 0);
   map1.createLayer("Tile Layer 2", world1Tileset, 0, 0);
-  player = this.physics.add.sprite(256, 256, "player");
+  player = this.physics.add.sprite(256, 256, "player", "townsfolk_f_idle_1");
   player.setCollideWorldBounds(true);
 
   const trees = this.physics.add.group({
@@ -84,6 +82,7 @@ function create() {
 }
 
 function update() {
+  player.anims.play("walk", true);
   if (cursors.left.isDown) {
     player.setVelocityX(-160);
   } else if (cursors.right.isDown) {
