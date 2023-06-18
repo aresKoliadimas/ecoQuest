@@ -81,23 +81,34 @@ function create() {
   spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 }
 
-function update() {
-  player.anims.play("walk", true);
+function move() {
+  let velocityX = 0;
+  let velocityY = 0;
+
   if (cursors.left.isDown) {
-    player.setVelocityX(-160);
+    velocityX = -160;
   } else if (cursors.right.isDown) {
-    player.setVelocityX(160);
-  } else {
-    player.setVelocityX(0);
+    velocityX = 160;
   }
 
   if (cursors.up.isDown) {
-    player.setVelocityY(-160);
+    velocityY = -160;
   } else if (cursors.down.isDown) {
-    player.setVelocityY(160);
-  } else {
-    player.setVelocityY(0);
+    velocityY = 160;
   }
+  const magnitude = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
+  if (magnitude > 0) {
+    velocityX /= magnitude;
+    velocityY /= magnitude;
+  }
+
+  player.setVelocityX(velocityX * 160);
+  player.setVelocityY(velocityY * 160);
+}
+
+function update() {
+  player.anims.play("walk", true);
+  move();
 
   // TODO: add condition to check if player is in the correct location
   if (woodCount >= 10 && !houseBuilt) {
