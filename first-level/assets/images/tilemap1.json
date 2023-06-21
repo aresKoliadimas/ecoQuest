@@ -223,20 +223,20 @@
         }, 
         {
          "draworder":"topdown",
-         "id":9,
+         "id":10,
          "name":"house",
          "objects":[
                 {
                  "gid":262,
                  "height":128,
-                 "id":89,
-                 "name":"house",
+                 "id":96,
+                 "name":"",
                  "rotation":0,
                  "type":"",
-                 "visible":false,
+                 "visible":true,
                  "width":128,
-                 "x":96.6838441812187,
-                 "y":452.89241665649
+                 "x":101.685675906704,
+                 "y":449.766271828062
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -244,8 +244,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":10,
- "nextobjectid":90,
+ "nextlayerid":11,
+ "nextobjectid":97,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.1",

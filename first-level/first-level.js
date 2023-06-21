@@ -34,13 +34,14 @@ let pointsText;
 let currentWorld = 1;
 let nextLevelPoints = 100;
 let houseLayer;
+let house;
 
 function preload() {
   this.load.image("world1", "first-level/assets/images/world1Tileset.png");
   //couldn't understand how to use the fucking tree from the tileset so i made my own image
   this.load.image("trees", "first-level/assets/images/trees.png");
   this.load.image("house", "first-level/assets/images/house.png");
-  this.load.tilemapTiledJSON("map1", "first-level/assets/images/tilemap.json");
+  this.load.tilemapTiledJSON("map1", "first-level/assets/images/tilemap1.json");
   this.load.atlas(
     "player",
     "first-level/assets/images/player.png",
@@ -80,13 +81,19 @@ function create() {
 // Enable physics for the trees group if needed
 this.physics.world.enable(trees);
 
-//add home
-houseLayer = map1.getObjectLayer("house");
-houseLayer.objects.forEach(houseObj => {
-  const house = this.physics.add.sprite(houseObj.x , houseObj.y -128, "house");
-  house.setOrigin(0, 0);
-  house.setVisible(false);
-});
+// Create a group to hold the house sprites
+  house = this.add.group();
+  houseLayer = map1.getObjectLayer("house");
+ 
+
+  houseLayer.objects.forEach(houseObj => {
+  const houses = house.create(houseObj.x, houseObj.y - 128, "house");
+  //house.setSize(128, 128);
+  houses.setOrigin(0, 0);
+  houses.setVisible(false);
+  });
+  
+  this.physics.world.enable(house);
 
 
   player = this.physics.add.sprite(256, 256, "player");
@@ -96,8 +103,6 @@ houseLayer.objects.forEach(houseObj => {
   this.physics.add.collider(player, trees, removeTree, null, this);
 
 
-  // Set collision between player and trees group
-  //this.physics.add.collider(player, trees, removeTree, null, this);
 
   pointsText = this.add.text(17, 17, "Points: 0", {
     fontSize: "15px",
@@ -149,7 +154,7 @@ function showBuildPopup() {
 
     switch (material) {
       case "wood":
-        buildHouseWithWood( this, houseLayer);
+        buildHouseWithWood( );
         break;
       case "rock":
         deductPointsAndShowText(ROCK_UNSUSTAINABLE);
@@ -163,14 +168,21 @@ function showBuildPopup() {
   }
 }
 
-function buildHouseWithWood(scene, houseLayer) {
+function buildHouseWithWood() {
   houseBuilt = true;
-  // TODO: Add house sprite
-  const houseObj = houseLayer.objects[0];
-  const houseSprite = scene.physics.add.sprite(houseObj.x, houseObj.y - 128, "house");
-  houseSprite.setOrigin(0, 0);
-  houseSprite.setVisible(true); // Set the visibility of the house sprite to true
+  if (houseLayer.objects.length > 0) {
+    const houseObject = houseLayer.objects[0];
+    const houseSprite = house.get(houseObject.x +64, houseObject.y -64, "house");
+    houseSprite.setVisible(true);
+  }
+
+ 
 }
+
+  
+  
+
+
   
 
 
