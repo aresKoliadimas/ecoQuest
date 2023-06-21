@@ -220,9 +220,32 @@
          "visible":true,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":9,
+         "name":"house",
+         "objects":[
+                {
+                 "gid":262,
+                 "height":128,
+                 "id":89,
+                 "name":"house",
+                 "rotation":0,
+                 "type":"",
+                 "visible":false,
+                 "width":128,
+                 "x":96.6838441812187,
+                 "y":452.89241665649
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":7,
- "nextobjectid":85,
+ "nextlayerid":10,
+ "nextobjectid":90,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.1",
@@ -1918,6 +1941,29 @@
                         }]
                 }],
          "tilewidth":32
+        }, 
+        {
+         "columns":1,
+         "firstgid":262,
+         "image":"house.png",
+         "imageheight":128,
+         "imagewidth":128,
+         "margin":0,
+         "name":"house",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":128,
+         "tiles":[
+                {
+                 "id":0,
+                 "properties":[
+                        {
+                         "name":"colides",
+                         "type":"bool",
+                         "value":true
+                        }]
+                }],
+         "tilewidth":128
         }],
  "tilewidth":32,
  "type":"map",
