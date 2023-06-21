@@ -36,7 +36,9 @@ let nextLevelPoints = 100;
 
 function preload() {
   this.load.image("world1", "first-level/assets/images/world1Tileset.png");
-  this.load.tilemapTiledJSON("map1", "first-level/assets/images/treesLOGS.json");
+  //couldn't understand how to use the fucking tree from the tileset so i made my own image
+  this.load.image("trees", "first-level/assets/images/trees.png");
+  this.load.tilemapTiledJSON("map1", "first-level/assets/images/tilemap1.json");
   this.load.atlas(
     "player",
     "first-level/assets/images/player.png",
@@ -55,24 +57,29 @@ function create() {
     0
   );
    // Create the tile layers
-  const tileLayer1 = map1.createLayer("Tile Layer 1", world1Tileset, 0, 0);
-  const tileLayer2 = map1.createLayer("Tile Layer 2", world1Tileset, 0, 0);
-  const treesLayer = map1.createLayer("trees", world1Tileset, 0, 0);
- 
-   // Set the depth order of the layers
-  tileLayer1.setDepth(0);
-  tileLayer2.setDepth(1);
-  treesLayer.setDepth(2);
+  const grassLayer = map1.createLayer("grass", world1Tileset, 0, 0);
+  //could add walls around and in the exit path
+  const groundLayer = map1.createLayer("ground", world1Tileset, 0, 0);
+//original tree code DONT KNOW IF IT WAS MORE HELPFULL FOR THE REST OF THE COLLISIONS AND SHIT
 
-  const treeObjects = map1.getObjectLayer("tree").objects; // Retrieve tree objects from the object layer
+  //const trees = this.physics.add.staticGroup()
+  //const treesLayer = map1.getObjectLayer("trees",world1Tileset, 0, 0);
+  //treesLayer.objects.forEach(treesObj =>{trees.get(treesObj.x, treesObj.y, 'trees', 'world1Tileset.png')})
+  //trees.create(treesObj.x, treesObj.y, "world1")
+  // Create the trees group and add tree objects
+  const trees = this.add.group();
+  const treesLayer = map1.getObjectLayer("trees");
 
-  trees = this.physics.add.staticGroup(); // Group to hold the tree sprites
+  treesLayer.objects.forEach(treesObj => {
+  const tree = trees.create(treesObj.x, treesObj.y - 64, "trees");
+  tree.setSize(32, 64);
+  tree.setOrigin(0, 0);
+});
 
-  treeObjects.forEach((treeObject) => {
-    const tree = trees.create(treeObject.x, treeObject.y, "world1", treeObject.gid - 1);
-    tree.setOrigin(0, 1);
-    tree.body.setSize(tree.width, tree.height);
-  });
+// Enable physics for the trees group if needed
+this.physics.world.enable(trees);
+
+  
 
   player = this.physics.add.sprite(256, 256, "player");
   player.setCollideWorldBounds(true);
