@@ -6,6 +6,7 @@ import {
   CONGRATS,
   WRONG_ANSWER,
   CORRECT_ANSWER,
+  MUST_BUILD_HOUSE,
 } from "../constants/messages.js";
 import { QUESTIONS } from "../constants/quiz.js";
 
@@ -253,7 +254,7 @@ export default class FirstLevel extends Phaser.Scene {
       if (playerAnswer !== null) {
         const formattedAnswer = playerAnswer.trim().toLowerCase();
         if (formattedAnswer === currentQuestion.answers.correct.toLowerCase()) {
-          window.alert("Yes! That's the correct answer.\n\n +50 points");
+          window.alert(CORRECT_ANSWER);
           this.updateScore(50);
           currentQuestionIndex++;
 
@@ -326,7 +327,7 @@ export default class FirstLevel extends Phaser.Scene {
 
   moveToNextLevel() {
     if (!this.isHouseBuilt) {
-      this.showMessage(CORRECT_ANSWER);
+      this.showMessage(MUST_BUILD_HOUSE);
       this.player.setPosition(256, 256);
       return;
     }
