@@ -364,7 +364,6 @@ export default class FirstLevel extends Phaser.Scene {
       this.input.keyboard.off("keydown-SPACE", dismissMessage);
 
       // Re-enable player input
-      this.player.clearTint();
       this.player.body.moves = true;
       this.isMessageOn = !this.isMessageOn;
     };
@@ -380,5 +379,6 @@ export default class FirstLevel extends Phaser.Scene {
       this.player.setPosition(256, 256);
       return;
     }
+    this.scene.start("secondLevel", { points: this.points });
   }
 }
