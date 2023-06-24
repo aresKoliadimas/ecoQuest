@@ -8,7 +8,7 @@ import {
   CORRECT_ANSWER,
   MUST_BUILD_HOUSE,
 } from "../constants/messages.js";
-import { QUESTIONS } from "../constants/quiz.js";
+import { EXPLANATIONS, QUESTIONS } from "../constants/quiz.js";
 
 export default class FirstLevel extends Phaser.Scene {
   cursors = undefined;
@@ -28,11 +28,13 @@ export default class FirstLevel extends Phaser.Scene {
   shouldShowQuiz = false;
   isQuizFinished = false;
   questions = undefined;
+  explanations = undefined;
 
   constructor() {
     super("firstLevel");
 
     this.questions = QUESTIONS;
+    this.explanations = EXPLANATIONS;
   }
 
   preload() {
@@ -276,7 +278,9 @@ export default class FirstLevel extends Phaser.Scene {
         const formattedAnswer = playerAnswer.trim().toLowerCase();
         if (formattedAnswer === currentQuestion.answers.correct.toLowerCase()) {
           this.correctEffect.play();
-          window.alert(CORRECT_ANSWER);
+          window.alert(
+            `${CORRECT_ANSWER}\n\n${this.explanations[formattedAnswer]}`
+          );
           this.updateScore(50);
           currentQuestionIndex++;
 
