@@ -41,7 +41,7 @@ import {
       const playerAnimation = this.cache.json.get("player_animation");
       this.anims.fromJSON(playerAnimation);
       const secondLevelTilemap = this.make.tilemap({ key: "secondLevelTilemap" });
-      const secondLevelTileset = firstLevelTilemap.addTilesetImage(
+      const secondLevelTileset = secondLevelTilemap.addTilesetImage(
         "seconLevelTileset",
         "secondLevelTilesetImage",
         32,
@@ -63,24 +63,24 @@ import {
       );
   
       //label
-      const trash = this.physics.add.staticGroup();
+     /*  const trash = this.physics.add.staticGroup();
       const trashLayer = secondLevelTilemap.getObjectLayer("trash");
       trashLayer.objects.forEach((trashObj) => {
         const trashes = trash.create(trashObj.x, trashObj.y, "trash");
         trashes.setSize(32, 32);
         trashes.setOrigin(0, 0);
       });
-      this.physics.world.enable(trash);
+      this.physics.world.enable(trash); */
   
       // Create the trees group and add tree objects
-      const bin = this.physics.add.staticGroup();
+      /* const bin = this.physics.add.staticGroup();
       const binLayer = secondLevelTilemap.getObjectLayer("bin");
       binLayer.objects.forEach((binObj) => {
         const bins = trees.create(binObj.x, binObj.y, "bin");
         //tree.setSize(32, 64);
         bins.setOrigin(0, 0);
       });
-      this.physics.world.enable(bin);
+      this.physics.world.enable(bin); */
   
      
   
