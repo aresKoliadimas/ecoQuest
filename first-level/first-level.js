@@ -7,6 +7,7 @@ import {
   WRONG_ANSWER,
   CORRECT_ANSWER,
 } from "../constants/messages.js";
+import { QUESTIONS } from "../constants/quiz.js";
 
 export default class FirstLevel extends Phaser.Scene {
   cursors = null;
@@ -23,56 +24,7 @@ export default class FirstLevel extends Phaser.Scene {
   isMessageOn = false;
   shouldShowQuiz = false;
   isQuizFinished = false;
-
-  // Energy-related questions
-  questions = [
-    {
-      question: "What is a renewable energy source?",
-      answers: {
-        correct: "Solar",
-        wrong: ["Gas", "Petrol"],
-      },
-    },
-    {
-      question:
-        "Which energy source produces the MOST greenhouse gas emissions?",
-      answers: {
-        correct: "Coal",
-        wrong: ["Solar", "Wind"],
-      },
-    },
-    {
-      question:
-        "What is the primary source of energy for nuclear power plants?",
-      answers: {
-        correct: "Uranium",
-        wrong: ["Coal", "Natural gas"],
-      },
-    },
-    {
-      question: "What is the main advantage of wind energy?",
-      answers: {
-        correct: "Renewable",
-        wrong: ["Polluting", "Expensive"],
-      },
-    },
-    {
-      question:
-        "Which type of energy is obtained from the heat of the Earth's interior?",
-      answers: {
-        correct: "Geothermal",
-        wrong: ["Solar", "Hydroelectric"],
-      },
-    },
-    {
-      question:
-        "What is the process of converting sunlight into electricity called?",
-      answers: {
-        correct: "Photovoltaic",
-        wrong: ["Combustion", "Fission"],
-      },
-    },
-  ];
+  questions = QUESTIONS;
 
   constructor() {
     super("firstLevel");
