@@ -1,4 +1,5 @@
 import FirstLevel from "./first-level/first-level.js";
+import SecondLevel from "./first-level/second-level.js";
 import StartingScreen from "./starting-screen/starting-screen.js";
 
 const config = {
@@ -11,10 +12,11 @@ const config = {
       gravity: { y: 0 },
     },
   },
-  scene: [StartingScreen, FirstLevel],
+  scene: [SecondLevel],
   scale: {
     zoom: 1.4,
   },
 };
 
 export default new Phaser.Game(config);
+//StartingScreen, FirstLevel,
