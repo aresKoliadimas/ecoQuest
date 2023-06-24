@@ -11,27 +11,41 @@ import {
 import { QUESTIONS } from "../constants/quiz.js";
 
 export default class FirstLevel extends Phaser.Scene {
-  cursors = null;
-  spacebar = null;
+  cursors = undefined;
+  treeCutSound = undefined;
+  correctEffect = undefined;
+  wrongEffect = undefined;
   isHouseBuilt = false;
   allowBuild = false;
   noOfCutTrees = 0;
-  player = null;
+  player = undefined;
   points = 0;
-  pointsText = null;
+  pointsText = undefined;
   nextLevelPoints = 100;
-  houseLayer = null;
-  house = null;
+  houseLayer = undefined;
+  house = undefined;
   isMessageOn = false;
   shouldShowQuiz = false;
   isQuizFinished = false;
-  questions = QUESTIONS;
+  questions = undefined;
 
   constructor() {
     super("firstLevel");
+
+    this.questions = QUESTIONS;
   }
 
   preload() {
+    this.load.audio(
+      "firstLevelTheme",
+      "first-level/assets/sounds/firstLevelTheme.ogg"
+    );
+    this.load.audio(
+      "treeCutSound",
+      "first-level/assets/sounds/tree_cut_sound.mp3"
+    );
+    this.load.audio("correctEffect", "first-level/assets/sounds/correct.mp3");
+    this.load.audio("wrongEffect", "first-level/assets/sounds/wrong.mp3");
     this.load.image(
       "firstLevelTilesetImage",
       "first-level/assets/images/firstLevelTileset.png"
@@ -48,6 +62,11 @@ export default class FirstLevel extends Phaser.Scene {
   }
 
   create() {
+    const firstLevelMusic = this.sound.add("firstLevelTheme");
+    firstLevelMusic.play({ loop: true });
+    this.treeCutSound = this.sound.add("treeCutSound");
+    this.correctEffect = this.sound.add("correctEffect");
+    this.wrongEffect = this.sound.add("wrongEffect");
     const playerAnimation = this.cache.json.get("player_animation");
     this.anims.fromJSON(playerAnimation);
     const firstLevelTilemap = this.make.tilemap({ key: "firstLevelTilemap" });
@@ -175,6 +194,7 @@ export default class FirstLevel extends Phaser.Scene {
       return;
     }
     tree.destroy();
+    this.treeCutSound.play();
     this.noOfCutTrees++;
 
     if (this.noOfCutTrees >= 10) {
@@ -195,6 +215,7 @@ export default class FirstLevel extends Phaser.Scene {
       switch (material) {
         case "wood":
           this.allowBuild = true;
+          this.correctEffect.play();
           this.showMessage(CUT_TREES);
           break;
         case "rock":
@@ -254,6 +275,7 @@ export default class FirstLevel extends Phaser.Scene {
       if (playerAnswer !== null) {
         const formattedAnswer = playerAnswer.trim().toLowerCase();
         if (formattedAnswer === currentQuestion.answers.correct.toLowerCase()) {
+          this.correctEffect.play();
           window.alert(CORRECT_ANSWER);
           this.updateScore(50);
           currentQuestionIndex++;
@@ -269,6 +291,7 @@ export default class FirstLevel extends Phaser.Scene {
           }
         } else {
           // Incorrect answer
+          this.wrongEffect.play();
           window.alert(WRONG_ANSWER);
           showNextQuestion();
         }
