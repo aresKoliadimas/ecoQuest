@@ -8,8 +8,9 @@ export default class FirstLevel extends Phaser.Scene {
   cursors = null;
   spacebar = null;
   houseBuilt = false;
+  allowBuild = false;
+  cutTrees = 0;
   player = null;
-  woods = null;
   points = 0;
   pointsText = null;
   nextLevelPoints = 100;
@@ -61,7 +62,7 @@ export default class FirstLevel extends Phaser.Scene {
     );
 
     // Create the trees group and add tree objects
-    const trees = this.add.group();
+    const trees = this.physics.add.staticGroup();
     const treesLayer = firstLevelTilemap.getObjectLayer("trees");
     treesLayer.objects.forEach((treesObj) => {
       const tree = trees.create(treesObj.x, treesObj.y - 64, "trees");
@@ -71,7 +72,7 @@ export default class FirstLevel extends Phaser.Scene {
     this.physics.world.enable(trees);
 
     // Create a group to hold the house sprites
-    this.house = this.add.group();
+    this.house = this.physics.add.staticGroup();
     this.houseLayer = firstLevelTilemap.getObjectLayer("house");
     this.houseLayer.objects.forEach((houseObj) => {
       const house = this.house.create(houseObj.x, houseObj.y - 128, "house");
@@ -96,14 +97,13 @@ export default class FirstLevel extends Phaser.Scene {
     });
 
     this.cursors = this.input.keyboard.createCursorKeys();
-    this.spacebar = this.input.keyboard.addKey(
-      Phaser.Input.Keyboard.KeyCodes.SPACE
-    );
   }
 
   update() {
     this.player.anims.play("walk", true);
     this.move();
+
+    this.removeTree();
 
     if (this.points >= this.nextLevelPoints) {
       this.moveToNextLevel();
@@ -137,7 +137,11 @@ export default class FirstLevel extends Phaser.Scene {
   }
 
   removeTree(player, tree) {
+    if (!this.allowBuild) {
+      return;
+    }
     tree.destroy();
+    this.cutTrees += 1;
     this.points += 10;
     this.pointsText.setText("Points: " + this.points);
   }
@@ -150,6 +154,7 @@ export default class FirstLevel extends Phaser.Scene {
 
       switch (material) {
         case "wood":
+          this.allowBuild = true;
           this.buildHouseWithWood();
           break;
         case "rock":
@@ -178,7 +183,7 @@ export default class FirstLevel extends Phaser.Scene {
   }
 
   deductPointsAndShowText(message) {
-    this.points = Math.max(this.points - 5, 0); // Deduct points, but ensure it doesn't go below 0
+    this.points = Math.max(this.points - 5, 0);
     this.pointsText.setText("Points: " + this.points);
     this.showMessage(message);
   }
