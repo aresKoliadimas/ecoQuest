@@ -32,6 +32,7 @@ export default class FirstLevel extends Phaser.Scene {
     );
     this.load.image("trees", "first-level/assets/images/trees.png");
     this.load.image("house", "first-level/assets/images/house.png");
+    this.load.image("label", "first-level/assets/images/label.png");
     this.load.atlas("player", "shared/player.png", "shared/player_atlas.json");
     this.load.json("player_animation", "shared/player_animation.json");
   }
@@ -60,6 +61,16 @@ export default class FirstLevel extends Phaser.Scene {
       0,
       0
     );
+
+    //label
+    const label = this.physics.add.staticGroup();
+    const labelLayer = firstLevelTilemap.getObjectLayer("label");
+    labelLayer.objects.forEach((labelObj) => {
+      const labels = label.create(labelObj.x, labelObj.y, "label");
+      labels.setSize(32, 32);
+      labels.setOrigin(0, 0);
+    });
+    this.physics.world.enable(label);
 
     // Create the trees group and add tree objects
     const trees = this.physics.add.staticGroup();
