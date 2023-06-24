@@ -5,6 +5,7 @@ import {
   CUT_TREES,
   CONGRATS,
   WRONG_ANSWER,
+  CORRECT_ANSWER,
 } from "../constants/messages.js";
 
 export default class FirstLevel extends Phaser.Scene {
@@ -373,9 +374,7 @@ export default class FirstLevel extends Phaser.Scene {
 
   moveToNextLevel() {
     if (!this.isHouseBuilt) {
-      this.showMessage(
-        "You must built the house. Go to the label...\n\nPress SPACE to continue"
-      );
+      this.showMessage(CORRECT_ANSWER);
       this.player.setPosition(256, 256);
       return;
     }
