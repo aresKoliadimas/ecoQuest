@@ -144,7 +144,7 @@ export default class FirstLevel extends Phaser.Scene {
     );
 
     this.pointsText = this.add.text(17, 17, "Points: 0", {
-      fontSize: "15px",
+      fontSize: "20px",
       fill: "#000",
     });
 

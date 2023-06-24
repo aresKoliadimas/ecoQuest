@@ -1,6 +1,6 @@
 export const WELCOME = "Welcome to ecoQuest\n\n";
 export const INSTRUCTIONS =
-  "Instructions:\nUse the arrow keys to move the player.\n\n•Your goal for the first level is to build a house.\n\n•Your goal for the second level is to clean the beach.\n\n\n\nPress SPACEBAR to start the game.";
+  "Instructions:\nUse the arrow keys to move the player.\n\n•Your goal for the first level is to build a house. Go to the label to start the building process\n\n•Your goal for the second level is to clean the beach.\n\n\n\nPress SPACEBAR to start the game.";
 export const BUILD_HOUSE =
   "You want to build the house. Select the material to use:\n\nWood\nRock\nConcrete";
 export const ROCK_UNSUSTAINABLE =
