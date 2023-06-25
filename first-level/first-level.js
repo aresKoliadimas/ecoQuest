@@ -252,7 +252,7 @@ export default class FirstLevel extends Phaser.Scene {
       houseSprite.setVisible(true);
 
       this.shouldShowQuiz = !this.shouldShowQuiz;
-      this.showQuiz();
+      this.time.delayedCall(1000, this.showQuiz, [], this);
     }
   }
 
