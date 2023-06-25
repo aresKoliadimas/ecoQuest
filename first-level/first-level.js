@@ -29,6 +29,7 @@ export default class FirstLevel extends Phaser.Scene {
   isQuizFinished = false;
   questions = undefined;
   explanations = undefined;
+  firstLevelMusic = undefined;
 
   constructor() {
     super("firstLevel");
@@ -64,8 +65,8 @@ export default class FirstLevel extends Phaser.Scene {
   }
 
   create() {
-    const firstLevelMusic = this.sound.add("firstLevelTheme");
-    firstLevelMusic.play({ loop: true });
+    this.firstLevelMusic = this.sound.add("firstLevelTheme");
+    this.firstLevelMusic.play({ loop: true });
     this.treeCutSound = this.sound.add("treeCutSound");
     this.correctEffect = this.sound.add("correctEffect");
     this.wrongEffect = this.sound.add("wrongEffect");
@@ -358,6 +359,7 @@ export default class FirstLevel extends Phaser.Scene {
       this.player.setPosition(256, 256);
       return;
     }
+    this.firstLevelMusic.stop();
     this.scene.start("secondLevel", { points: this.points });
   }
 }
