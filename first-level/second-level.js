@@ -160,7 +160,7 @@ import { EXPLANATIONS, QUESTIONS } from "../constants/quiz.js";
       this.physics.add.collider(
         this.player,
         bin,
-        this.showBuildPopup,
+        this.showCleanPopup,
         null,
         this
       );
@@ -269,7 +269,7 @@ import { EXPLANATIONS, QUESTIONS } from "../constants/quiz.js";
     }  
 
   
-    showRecyclePopup() {
+    showCleanPopup() {
         if (this.isBeachClean) {
             return;
           }
@@ -287,7 +287,7 @@ import { EXPLANATIONS, QUESTIONS } from "../constants/quiz.js";
           case "leave_poluted":
             this.deductPointsAndShowText(LEAVE_POLUTED);
             if (!this.isMessageOn) {
-                this.cleanBeach();
+                this.showCleanPopup();
               }
             break;
           default:
