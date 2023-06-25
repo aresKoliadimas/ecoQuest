@@ -16,12 +16,11 @@ export const WRONG_ANSWER = "Oops! That's not the correct answer.";
 export const CONGRATS =
   "Congratulations! You answered all the questions correctly!\n\nPress SPACE to continue";
 
-export const  POLUTED_BEACH =
-"You just arrived at the beach and saw a lot of carbages. What sould you do:\n\Clean\nLeave_poluted";
+export const POLLUTED_BEACH =
+  "You just arrived at the beach and saw a lot of garbages. What should you do:\nClean\nLeave polluted";
 export const CLEAN_BEACH =
   " Beaches must be maintained clean for various reasons. Environmental Preservation,Marine Life Protection,Water Quality,Public Health and Safety,lastly Aesthetics and Enjoyment.\n\nSo you should clean the beach!\n\nPress SPACE to continue";
-export const  LEAVE_POLUTED =
+export const LEAVE_POLLUTED =
   " Garbage thrown on the beach can pollute the water and soil. Moreover they can harm or disrupt the ecosystems. Marine animals, birds, and other wildlife can mistake the garbage for food or become entangled in it, leading to injury or death.\n\nPress SPACE to continue";
 export const MUST_CLEAN_BEACH =
   "You must clean the beach. Go to the recycle bin...\n\nPress SPACE to continue";
-  
