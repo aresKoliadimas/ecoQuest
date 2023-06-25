@@ -2,33 +2,41 @@ import {
   POLLUTED_BEACH,
   LEAVE_POLLUTED,
   CLEAN_BEACH,
-  CONGRATS,
   WRONG_ANSWER,
   CORRECT_ANSWER,
-  MUST_CLEAN_BEACH,
+  FOOD_LEFT,
+  PAPER_LEFT,
+  PLASTIC_LEFT,
+  GOOD_JOB,
+  BEAT_GAME,
+  GO_TO_BIN,
 } from "../constants/messages.js";
 import { EXPLANATIONS, QUESTIONS } from "../constants/quiz2.js";
 
 export default class SecondLevel extends Phaser.Scene {
-  initialPoints = 0;
   cursors = null;
-  isBeachClean = false;
   allowRecycle = false;
-  noOfRecycled = 0;
+  noOfPaperRecycled = 0;
+  noOfFoodRecycled = 0;
+  noOfPlasticRecycled = 0;
   player = undefined;
-  points = 100;
+  points = 0;
   pointsText = undefined;
-  nextLevelPoints = 150;
   isMessageOn = false;
   shouldShowQuiz = false;
   isQuizFinished = false;
   questions = undefined;
   explanations = undefined;
+  shouldCheckGarbageExistence = true;
 
   constructor() {
     super("secondLevel");
     this.questions = QUESTIONS;
     this.explanations = EXPLANATIONS;
+  }
+
+  init(data) {
+    this.points = data.points || 0;
   }
 
   preload() {
@@ -46,15 +54,18 @@ export default class SecondLevel extends Phaser.Scene {
     this.load.image("food2", "second-level/assets/images/food2.png");
     this.load.image("paper", "second-level/assets/images/paper.png");
     this.load.image("bin", "second-level/assets/images/bin1.png");
-
+    this.load.audio("correctEffect", "first-level/assets/sounds/correct.mp3");
+    this.load.audio("wrongEffect", "first-level/assets/sounds/wrong.mp3");
     this.load.atlas("player", "shared/player.png", "shared/player_atlas.json");
     this.load.json("player_animation", "shared/player_animation.json");
   }
 
   create() {
+    this.time.delayedCall(1000, this.showCleanUpQuestion, [], this);
     const playerAnimation = this.cache.json.get("player_animation");
     this.anims.fromJSON(playerAnimation);
-
+    this.correctEffect = this.sound.add("correctEffect");
+    this.wrongEffect = this.sound.add("wrongEffect");
     const secondLevelTilemap = this.make.tilemap({ key: "secondLevelTilemap" });
     const secondLevelTileset = secondLevelTilemap.addTilesetImage(
       "secondLevelTileset",
@@ -169,17 +180,11 @@ export default class SecondLevel extends Phaser.Scene {
       undefined,
       this
     );
-    this.physics.add.collider(
-      this.player,
-      bin,
-      this.showCleanPopup,
-      null,
-      this
-    );
+    this.physics.add.collider(this.player, bin, this.showBinPopup, null, this);
 
-    this.pointsText = this.add.text(17, 17, "Points: 0", {
+    this.pointsText = this.add.text(17, 17, `Points:${this.points}`, {
       fontSize: "15px",
-      fill: "#000",
+      fill: "#fff",
     });
 
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -189,9 +194,21 @@ export default class SecondLevel extends Phaser.Scene {
     this.player.anims.play("walk", true);
     this.move();
 
-    if (this.points >= this.nextLevelPoints) {
-      this.moveToNextLevel();
+    if (this.shouldCheckGarbageExistence) {
+      this.checkGarbageExist();
     }
+  }
+
+  checkGarbageExist() {
+    if (
+      this.noOfFoodRecycled < 6 ||
+      this.noOfPaperRecycled < 3 ||
+      this.noOfPlasticRecycled < 6
+    ) {
+      return;
+    }
+    this.shouldCheckGarbageExistence = false;
+    this.showMessage(GO_TO_BIN);
   }
 
   updateScore(points) {
@@ -230,10 +247,7 @@ export default class SecondLevel extends Phaser.Scene {
       return;
     }
     plastic1.destroy();
-    this.noOfRecycled++;
-    if (this.noOfRecycled >= 15) {
-      this.cleanedBeach();
-    }
+    this.noOfPlasticRecycled++;
   }
 
   removePlastic2(player, plastic2) {
@@ -241,10 +255,7 @@ export default class SecondLevel extends Phaser.Scene {
       return;
     }
     plastic2.destroy();
-    this.noOfRecycled++;
-    if (this.noOfRecycled >= 15) {
-      this.cleanedBeach();
-    }
+    this.noOfPlasticRecycled++;
   }
 
   removePaper(player, paper) {
@@ -252,10 +263,7 @@ export default class SecondLevel extends Phaser.Scene {
       return;
     }
     paper.destroy();
-    this.noOfRecycled++;
-    if (this.noOfRecycled >= 15) {
-      this.cleanedBeach();
-    }
+    this.noOfPaperRecycled++;
   }
 
   removeFood1(player, food1) {
@@ -263,10 +271,7 @@ export default class SecondLevel extends Phaser.Scene {
       return;
     }
     food1.destroy();
-    this.noOfRecycled++;
-    if (this.noOfRecycled >= 15) {
-      this.cleanedBeach();
-    }
+    this.noOfFoodRecycled++;
   }
 
   removeFood2(player, food2) {
@@ -274,16 +279,10 @@ export default class SecondLevel extends Phaser.Scene {
       return;
     }
     food2.destroy();
-    if (this.noOfRecycled >= 15) {
-      this.cleanedBeach();
-    }
+    this.noOfFoodRecycled++;
   }
 
-  showCleanPopup() {
-    if (this.isBeachClean) {
-      return;
-    }
-
+  showCleanUpQuestion() {
     const selectedAction = window.prompt(POLLUTED_BEACH);
 
     if (selectedAction !== null) {
@@ -292,13 +291,13 @@ export default class SecondLevel extends Phaser.Scene {
       switch (action) {
         case "clean":
           this.allowRecycle = true;
+          this.correctEffect.play();
           this.showMessage(CLEAN_BEACH);
           break;
-        case "leave_polluted":
-          this.deductPointsAndShowText(LEAVE_POLLUTED);
-          if (!this.isMessageOn) {
-            this.showCleanPopup();
-          }
+        case "polluted":
+          this.wrongEffect.play();
+          window.alert(LEAVE_POLLUTED);
+          this.showCleanUpQuestion();
           break;
         default:
           break;
@@ -306,12 +305,30 @@ export default class SecondLevel extends Phaser.Scene {
     }
   }
 
+  showBinPopup() {
+    if (this.noOfFoodRecycled < 6) {
+      this.showMessage(FOOD_LEFT);
+      this.player.setPosition(256, 256);
+      return;
+    } else if (this.noOfPaperRecycled < 3) {
+      this.showMessage(PAPER_LEFT);
+      this.player.setPosition(256, 256);
+      return;
+    } else if (this.noOfPlasticRecycled < 6) {
+      this.showMessage(PLASTIC_LEFT);
+      this.player.setPosition(256, 256);
+      return;
+    } else {
+      window.alert(GOOD_JOB);
+      this.player.setPosition(256, 256);
+      this.cleanedBeach();
+    }
+  }
+
   cleanedBeach() {
     this.updateScore(100);
-    this.isBeachClean = true;
-    this.allowRecycle = false;
     this.shouldShowQuiz = !this.shouldShowQuiz;
-    this.showQuiz();
+    this.time.delayedCall(1000, this.showQuiz, [], this);
   }
 
   showQuiz() {
@@ -348,12 +365,14 @@ export default class SecondLevel extends Phaser.Scene {
           } else {
             // All questions answered correctly
             this.shouldShowQuiz = false;
-            this.showMessage(CONGRATS);
+            const score = `\n\nYour Score: ${this.points}`;
+            this.showMessage(BEAT_GAME + score);
             this.isQuizFinished = true;
+            this.gameOver();
           }
         } else {
           // Incorrect answer
-          //this.wrongEffect.play();
+          this.wrongEffect.play();
           window.alert(WRONG_ANSWER);
           showNextQuestion();
         }
@@ -410,13 +429,7 @@ export default class SecondLevel extends Phaser.Scene {
     this.input.keyboard.on("keydown-SPACE", dismissMessage);
   }
 
-  //FINISH THE GAME
-  moveToNextLevel() {
-    if (!this.isBeachClean) {
-      this.showMessage(MUST_CLEAN_BEACH);
-      this.player.setPosition(256, 256);
-      return;
-    }
-    // TODO: show endgame
+  gameOver() {
+    this.scene.stop();
   }
 }
