@@ -386,9 +386,9 @@ export default class SecondLevel extends Phaser.Scene {
           } else {
             // All questions answered correctly
             this.shouldShowQuiz = false;
-            const score = `\n\nYour Score: ${this.points}`;
+            const score = `Your Score: ${this.points}\n\n`;
             this.hasQuizEnded = true;
-            this.showMessage(BEAT_GAME + score);
+            this.showMessage(score + BEAT_GAME);
           }
         } else {
           // Incorrect answer
@@ -453,7 +453,6 @@ export default class SecondLevel extends Phaser.Scene {
   }
 
   gameOver() {
-    // TODO: stop game somehow
     this.game.destroy();
   }
 }
