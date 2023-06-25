@@ -27,6 +27,9 @@ export default class SecondLevel extends Phaser.Scene {
   questions = undefined;
   explanations = undefined;
   shouldCheckGarbageExistence = true;
+  disposeTrashSound = undefined;
+  pickupSound = undefined;
+  hasQuizEnded = false;
 
   constructor() {
     super("secondLevel");
@@ -39,6 +42,15 @@ export default class SecondLevel extends Phaser.Scene {
   }
 
   preload() {
+    this.load.audio(
+      "secondLevelTheme",
+      "second-level/assets/sounds/secondLevelTheme.mp3"
+    );
+    this.load.audio("pickup", "second-level/assets/sounds/pickup.wav");
+    this.load.audio(
+      "disposeTrash",
+      "second-level/assets/sounds/disposeTrash.wav"
+    );
     this.load.image(
       "secondLevelTilesetImage",
       "second-level/assets/images/secondLevelTileset.png"
@@ -60,6 +72,10 @@ export default class SecondLevel extends Phaser.Scene {
   }
 
   create() {
+    const secondLevelMusic = this.sound.add("secondLevelTheme");
+    secondLevelMusic.play({ loop: true });
+    this.pickupSound = this.sound.add("pickup");
+    this.disposeTrashSound = this.sound.add("disposeTrash");
     this.time.delayedCall(1000, this.showCleanUpQuestion, [], this);
     const playerAnimation = this.cache.json.get("player_animation");
     this.anims.fromJSON(playerAnimation);
@@ -245,6 +261,7 @@ export default class SecondLevel extends Phaser.Scene {
     if (!this.allowRecycle) {
       return;
     }
+    this.pickupSound.play();
     plastic1.destroy();
     this.noOfPlasticRecycled++;
   }
@@ -253,6 +270,7 @@ export default class SecondLevel extends Phaser.Scene {
     if (!this.allowRecycle) {
       return;
     }
+    this.pickupSound.play();
     plastic2.destroy();
     this.noOfPlasticRecycled++;
   }
@@ -261,6 +279,7 @@ export default class SecondLevel extends Phaser.Scene {
     if (!this.allowRecycle) {
       return;
     }
+    this.pickupSound.play();
     paper.destroy();
     this.noOfPaperRecycled++;
   }
@@ -269,6 +288,7 @@ export default class SecondLevel extends Phaser.Scene {
     if (!this.allowRecycle) {
       return;
     }
+    this.pickupSound.play();
     food1.destroy();
     this.noOfFoodRecycled++;
   }
@@ -277,6 +297,7 @@ export default class SecondLevel extends Phaser.Scene {
     if (!this.allowRecycle) {
       return;
     }
+    this.pickupSound.play();
     food2.destroy();
     this.noOfFoodRecycled++;
   }
@@ -318,6 +339,7 @@ export default class SecondLevel extends Phaser.Scene {
       this.player.setPosition(256, 256);
       return;
     } else {
+      this.disposeTrashSound.play();
       window.alert(GOOD_JOB);
       this.player.setPosition(256, 256);
       this.cleanedBeach();
@@ -365,8 +387,8 @@ export default class SecondLevel extends Phaser.Scene {
             // All questions answered correctly
             this.shouldShowQuiz = false;
             const score = `\n\nYour Score: ${this.points}`;
+            this.hasQuizEnded = true;
             this.showMessage(BEAT_GAME + score);
-            this.gameOver();
           }
         } else {
           // Incorrect answer
@@ -422,12 +444,16 @@ export default class SecondLevel extends Phaser.Scene {
       // Re-enable player input
       this.player.body.moves = true;
       this.isMessageOn = !this.isMessageOn;
+      if (this.hasQuizEnded) {
+        this.gameOver();
+      }
     };
 
     this.input.keyboard.on("keydown-SPACE", dismissMessage);
   }
 
   gameOver() {
-    this.scene.stop();
+    // TODO: stop game somehow
+    this.game.destroy();
   }
 }
