@@ -1,7 +1,7 @@
 import {
+    POLUTED_BEACH,
     LEAVE_POLUTED,
     CLEAN_BEACH,
-    CLEAN,
     CONGRATS,
     WRONG_ANSWER,
     CORRECT_ANSWER,
@@ -274,7 +274,7 @@ import { EXPLANATIONS, QUESTIONS } from "../constants/quiz.js";
             return;
           }
 
-        const selectedAction = window.prompt(CLEAN_BEACH);
+        const selectedAction = window.prompt(POLUTED_BEACH);
   
         if (selectedAction !== null) {
             const action = selectedAction.toLowerCase();
@@ -282,7 +282,7 @@ import { EXPLANATIONS, QUESTIONS } from "../constants/quiz.js";
         switch (action) {
           case "clean":
             this.allowRecycle = true;
-            this.showMessage(CLEAN);
+            this.showMessage(CLEAN_BEACH);
           break;;
           case "leave_poluted":
             this.deductPointsAndShowText(LEAVE_POLUTED);
@@ -295,7 +295,7 @@ import { EXPLANATIONS, QUESTIONS } from "../constants/quiz.js";
         }
       }
     }
-    cleanBeach() {
+    cleanedBeach() {
         this.updateScore(100);
         this.isBeachClean = true;
         this.allowRecycle = false;
@@ -402,8 +402,8 @@ import { EXPLANATIONS, QUESTIONS } from "../constants/quiz.js";
       }
     //FINISH THE GAME
       moveToNextLevel() {
-        if (!this.isHouseBuilt) {
-          this.showMessage(MUST_BUILD_HOUSE);
+        if (!this.isBeachClean) {
+          this.showMessage(MUST_CLEAN_BEACH);
           this.player.setPosition(256, 256);
           return;
         }
