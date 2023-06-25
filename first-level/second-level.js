@@ -8,7 +8,7 @@ import {
     cursors = null;
     spacebar = null;
     houseBuilt = false;
-    allowBuild = false;
+    allowRecycle = false;
     cutTrees = 0;
     player = null;
     points = 0;
@@ -20,18 +20,19 @@ import {
     constructor() {
       super("secondLevel");
     }
-  
+    
     preload() {
       this.load.image(
-        "Beach Tileset.png",
-        "second-level/assets/Beach Tileset.png"
+        "secondLevelTilesetImage",
+        "first-level/assets/images/secondLevelTileset.png"
       );
-      this.load.tilemapTiledJSON(
-        "beachtileset",
-        "second-level/assets/beach.json"
-      );
-      this.load.image("trash", "second-level/assets/trash3.png");
-      this.load.image("bin1", "second-level/assets/bin1.png");
+      this.load.tilemapTiledJSON("secondLevelTilemap", "first-level/assets/images/secondLevelTilemap1.json"); 
+      this.load.image('plastic1', 'first-level/assets/images/plastic1.png');
+      this.load.image('plastic2', 'first-level/assets/images/plastic2.png');
+      this.load.image('food1', 'first-level/assets/images/food1.png');
+      this.load.image('food2', 'first-level/assets/images/food2.png');
+      this.load.image('paper', 'first-level/assets/images/paper.png');
+      this.load.image('bin', 'first-level/assets/images/bin1.png')
       
       this.load.atlas("player", "shared/player.png", "shared/player_atlas.json");
       this.load.json("player_animation", "shared/player_animation.json");
@@ -40,50 +41,70 @@ import {
     create() {
       const playerAnimation = this.cache.json.get("player_animation");
       this.anims.fromJSON(playerAnimation);
+
       const secondLevelTilemap = this.make.tilemap({ key: "secondLevelTilemap" });
       const secondLevelTileset = secondLevelTilemap.addTilesetImage(
-        "seconLevelTileset",
+        "secondLevelTileset",
         "secondLevelTilesetImage",
         32,
         32,
         0,
         0
       );
-      const groundLayer = secondLevelTilemap.createLayer(
-        "ground",
-        secondLevelTileset,
-        0,
-        0
-      );
-      const obstacleLayer = secondLevelTilemap.createLayer(
-        "obstacle",
-        secondLevelTileset,
-        0,
-        0
-      );
-  
-      //label
-     /*  const trash = this.physics.add.staticGroup();
-      const trashLayer = secondLevelTilemap.getObjectLayer("trash");
-      trashLayer.objects.forEach((trashObj) => {
-        const trashes = trash.create(trashObj.x, trashObj.y, "trash");
-        trashes.setSize(32, 32);
-        trashes.setOrigin(0, 0);
+
+      const groundLayer = secondLevelTilemap.createLayer('ground', secondLevelTileset, 0, 0);
+      //groundLayer.setCollisionProperty({collides: true});
+      const treesLayer = secondLevelTilemap.createLayer('trees', secondLevelTileset, 0, 0);  
+      //treesLayer.setCollisionProperty({collides: true});
+
+      const plastic1 = this.physics.add.staticGroup();
+      const plastic1Layer = secondLevelTilemap.getObjectLayer("plastic1");
+      plastic1Layer.objects.forEach((plastic1Obj) => {
+        const plastic = plastic1.create(plastic1Obj.x-32, plastic1Obj.y-32, "plastic1");
+        plastic.setOrigin(0, 0);
       });
-      this.physics.world.enable(trash); */
-  
-      // Create the trees group and add tree objects
-      /* const bin = this.physics.add.staticGroup();
+      this.physics.world.enable(plastic1); 
+
+      const plastic2 = this.physics.add.staticGroup();
+      const plastic2Layer = secondLevelTilemap.getObjectLayer("plastic2");
+      plastic2Layer.objects.forEach((plastic2Obj) => {
+        const plastics = plastic2.create(plastic2Obj.x, plastic2Obj.y, "plastic2");
+        plastic2.setOrigin(0, 0);
+      });
+      this.physics.world.enable(plastic2); 
+      
+      const paper = this.physics.add.staticGroup();
+      const paperLayer = secondLevelTilemap.getObjectLayer("paper");
+      paperLayer.objects.forEach((paperObj) => {
+        const papers = paper.create(paperObj.x, paperObj.y, "paper");
+        papers.setOrigin(0, 0);
+      });
+      this.physics.world.enable(paper);
+
+      const food1 = this.physics.add.staticGroup();
+      const food1Layer = secondLevelTilemap.getObjectLayer("food1");
+      food1Layer.objects.forEach((food1Obj) => {
+        const food = food1.create(food1Obj.x, food1Obj.y, "food1");
+        food1.setOrigin(0, 0);
+      });
+      this.physics.world.enable(food1);
+
+      const food2 = this.physics.add.staticGroup();
+      const food2Layer = secondLevelTilemap.getObjectLayer("food2");
+      food2Layer.objects.forEach((food2Obj) => {
+        const foods = plastic2.create(food2Obj.x, food2Obj.y, "food2");
+        food2.setOrigin(0, 0);
+      });
+      this.physics.world.enable(food2);
+
+      const bin = this.physics.add.staticGroup();
       const binLayer = secondLevelTilemap.getObjectLayer("bin");
       binLayer.objects.forEach((binObj) => {
-        const bins = trees.create(binObj.x, binObj.y, "bin");
-        //tree.setSize(32, 64);
-        bins.setOrigin(0, 0);
+        const bins = bin.create(binObj.x, binObj.y, "bin");
+        bin.setOrigin(0, 0);
       });
-      this.physics.world.enable(bin); */
-  
-     
-  
+      this.physics.world.enable(bin);
+
       this.player = this.physics.add.sprite(
         256,
         256,
@@ -92,7 +113,42 @@ import {
       );
       this.player.setCollideWorldBounds(true);
   
-      this.physics.add.collider(this.player, trash, this.removeTrash, null, this);
+     this.physics.add.collider(this.player, plastic1, this.removeplastic1, null, this);
+     this.physics.add.collider(
+        this.player,
+        plastic1,
+        this.removeplastic1,
+        undefined,
+        this
+      );
+      this.physics.add.collider(
+        this.player,
+        paper,
+        this.removepaper,
+        undefined,
+        this
+      );
+      this.physics.add.collider(
+        this.player,
+        food1,
+        this.removefood1,
+        undefined,
+        this
+      );
+      this.physics.add.collider(
+        this.player,
+        food2,
+        this.removefood2,
+        undefined,
+        this
+      );
+      this.physics.add.collider(
+        this.player,
+        bin,
+        this.showBuildPopup,
+        null,
+        this
+      );
   
       this.pointsText = this.add.text(17, 17, "Points: 0", {
         fontSize: "15px",
@@ -101,17 +157,23 @@ import {
   
       this.cursors = this.input.keyboard.createCursorKeys();
     }
-  
+  //ti akrivos tha kanei otan teleiosei?
     update() {
       this.player.anims.play("walk", true);
       this.move();
-  
-      this.removeTrash();
-  
-      if (this.points >= this.nextLevelPoints) {
-        this.moveToNextLevel();
+      // if (this.points >= this.nextLevelPoints) {
+        //this.moveToNextLevel();
+     }
+    /* this.removeplastic1();
+    this.removeplastic2();
+    this.removefood1();
+    this.removefood2();
+    this.removepaper(); }*/
+
+    updateScore(points) {
+        this.points += points;
+        this.pointsText.setText("Points: " + this.points);
       }
-    }
   
     move() {
       let velocityX = 0;
@@ -139,15 +201,66 @@ import {
       this.player.setVelocityY(velocityY * 160);
     }
   
-    removeTree(player, trash) {
-      if (!this.allowBuild) {
+    removeTree(player, tree) {
+        if (!this.allowBuild) {
+          return;
+        }
+        tree.destroy();
+        this.treeCutSound.play();
+        this.noOfCutTrees++;
+    
+        if (this.noOfCutTrees >= 10) {
+          this.buildHouseWithWood();
+        }
+      }
+     removeplastic1(player, plastic1) {
+      if (!this.allowRecycle) {
         return;
       }
-      trash.destroy();
-      this.getTrash += 1;
-      this.points += 10;
-      this.pointsText.setText("Points: " + this.points);
-    }
+      plastic1.destroy();
+      this.treeCutSound.play();
+      this.noOfCutTrees++;
+      if (this.noOfCutTrees >= 10) {
+        this.buildHouseWithWood();
+      }
+    } 
+    removeplastic2(player, plastic2) {
+        if (!this.allowRecycle) {
+          return;
+        }
+        plastic2.destroy();
+        this.getplastic2 += 1;
+        this.points += 10;
+        this.pointsText.setText("Points: " + this.points);
+      }
+      
+      removepaper(player, paper) {
+        if (!this.allowRecycle) {
+          return;
+        }
+        paper.destroy();
+        this.paper += 1;
+        this.points += 10;
+        this.pointsText.setText("Points: " + this.points);
+      } 
+      removefood1(player, food1) {
+        if (!this.allowRecycle) {
+          return;
+        }
+        food1.destroy();
+        this.food1 += 1;
+        this.points += 10;
+        this.pointsText.setText("Points: " + this.points);
+      } 
+      removefood2(player, food2) {
+        if (!this.allowRecycle) {
+          return;
+        }
+        food2.destroy();
+        this.food2 += 1;
+        this.points += 10;
+        this.pointsText.setText("Points: " + this.points);
+      } 
   
     showBuildPopup() {
       const selectedMaterial = window.prompt(BUILD_HOUSE);
@@ -157,7 +270,7 @@ import {
   
         switch (material) {
           case "wood":
-            this.allowBuild = true;
+            this.allowRecycle = true;
             this.buildHouseWithWood();
             break;
           case "rock":
@@ -172,18 +285,7 @@ import {
       }
     }
   
-   /*  buildHouseWithWood() {
-      this.houseBuilt = true;
-      if (this.houseLayer.objects.length > 0) {
-        const houseObject = this.houseLayer.objects[0];
-        const houseSprite = this.house.get(
-          houseObject.x + 64,
-          houseObject.y - 64,
-          "house"
-        );
-        houseSprite.setVisible(true);
-      }
-    } */
+   
   
     deductPointsAndShowText(message) {
       this.points = Math.max(this.points - 5, 0);
