@@ -10,18 +10,22 @@ import {
 import { EXPLANATIONS, QUESTIONS } from "../constants/quiz.js";
   
   export default class SecondLevel extends Phaser.Scene {
+    initialpoints = 0;
     cursors = null;
     spacebar = null;
     isBeachClean = false;
-    houseBuilt = false;
     allowRecycle = false;
-    cutTrees = 0;
-    player = null;
-    points = 0;
-    pointsText = null;
-    nextLevelPoints = 100;
-    houseLayer = null;
-    house = null;
+    noOfRecycled = 0;
+    player = undefined;
+    points = 100;
+    pointsText = undefined;
+    nextLevelPoints = 150;
+    isMessageOn = false;
+    shouldShowQuiz = false;
+    isQuizFinished = false;
+    questions = undefined;
+    explanations = undefined;
+   
   
     constructor() {
       super("secondLevel");
@@ -176,19 +180,17 @@ import { EXPLANATIONS, QUESTIONS } from "../constants/quiz.js";
     update() {
       this.player.anims.play("walk", true);
       this.move();
-      // if (this.points >= this.nextLevelPoints) {
-        //this.moveToNextLevel();
+       if (this.points >= this.nextLevelPoints) {
+        this.moveToNextLevel();
      }
-    /* this.removeplastic1();
-    this.removeplastic2();
-    this.removefood1();
-    this.removefood2();
-    this.removepaper(); }*/
+    }
+    
 
     updateScore(points) {
         this.points += points;
         this.pointsText.setText("Points: " + this.points);
-      }
+    }
+    
   
     move() {
       let velocityX = 0;
@@ -223,7 +225,7 @@ import { EXPLANATIONS, QUESTIONS } from "../constants/quiz.js";
       plastic1.destroy();
       //this.treeCutSound.play();
       this.noOfRecycled++;
-      if (this.noOfRecycled >= 10) {
+      if (this.noOfRecycled >= 15) {
         this.cleanedBeach();
       }
     } 
@@ -233,7 +235,7 @@ import { EXPLANATIONS, QUESTIONS } from "../constants/quiz.js";
         }
         plastic2.destroy();
         this.noOfRecycled++;
-        if (this.noOfRecycled >= 10) {
+        if (this.noOfRecycled >= 15) {
           this.cleanedBeach();
         }
     }
@@ -244,7 +246,7 @@ import { EXPLANATIONS, QUESTIONS } from "../constants/quiz.js";
         }
         paper.destroy();
         this.noOfRecycled++;
-        if (this.noOfRecycled >= 10) {
+        if (this.noOfRecycled >= 15) {
           this.cleanedBeach();
         }
     } 
@@ -254,7 +256,7 @@ import { EXPLANATIONS, QUESTIONS } from "../constants/quiz.js";
         }
         food1.destroy();
         this.noOfRecycled++;
-        if (this.noOfRecycled >= 10) {
+        if (this.noOfRecycled >= 15) {
           this.cleanedBeach();
         }
     }
@@ -263,7 +265,7 @@ import { EXPLANATIONS, QUESTIONS } from "../constants/quiz.js";
           return;
         }
         food2.destroy();
-        if (this.noOfRecycled >= 10) {
+        if (this.noOfRecycled >= 15) {
             this.cleanedBeach();
         }
     }  
@@ -300,10 +302,9 @@ import { EXPLANATIONS, QUESTIONS } from "../constants/quiz.js";
         this.isBeachClean = true;
         this.allowRecycle = false;
         //TI THELO NA KANEI ?
-        if (this.houseLayer.objects.length > 0) {
-          this.shouldShowQuiz = !this.shouldShowQuiz;
-          this.showQuiz();
-        }
+        this.shouldShowQuiz = !this.shouldShowQuiz;
+        this.showQuiz();
+        
     }
 
     showQuiz() {
@@ -345,7 +346,7 @@ import { EXPLANATIONS, QUESTIONS } from "../constants/quiz.js";
               }
             } else {
               // Incorrect answer
-              this.wrongEffect.play();
+              //this.wrongEffect.play();
               window.alert(WRONG_ANSWER);
               showNextQuestion();
             }
@@ -408,9 +409,8 @@ import { EXPLANATIONS, QUESTIONS } from "../constants/quiz.js";
           return;
         }
         this.scene.start("secondLevel", { points: this.points });
-      }
+    }
 }
 
-    
-   
-      
+
+  
