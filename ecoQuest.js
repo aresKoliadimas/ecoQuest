@@ -1,6 +1,6 @@
+import StartingScreen from "./starting-screen/starting-screen.js";
 import FirstLevel from "./first-level/first-level.js";
 import SecondLevel from "./second-level/second-level.js";
-import StartingScreen from "./starting-screen/starting-screen.js";
 
 const config = {
   type: Phaser.AUTO,
@@ -12,8 +12,7 @@ const config = {
       gravity: { y: 0 },
     },
   },
-  // scene: [StartingScreen, FirstLevel, SecondLevel],
-  scene: [SecondLevel],
+  scene: [StartingScreen, FirstLevel, SecondLevel],
   scale: {
     zoom: 1.4,
   },
