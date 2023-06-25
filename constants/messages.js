@@ -21,7 +21,7 @@ export const POLLUTED_BEACH =
 export const CLEAN_BEACH =
   "Beaches must be maintained clean for various reasons. Environmental Preservation,Marine Life Protection,Water Quality,Public Health and Safety,lastly Aesthetics and Enjoyment.\n\nSo, you are correct, you should always clean the beach!\n\nPress SPACE to continue...";
 export const LEAVE_POLLUTED =
-  "Garbage thrown on the beach can pollute the water and soil. Moreover they can harm or disrupt the ecosystems.\n\nMarine animals, birds, and other wildlife can mistake the garbage for food or become entangled in it, leading to injury or death.";
+  "WRONG!\n\nGarbage thrown on the beach can pollute the water and soil. Moreover they can harm or disrupt the ecosystems.\n\nMarine animals, birds, and other wildlife can mistake the garbage for food or become entangled in it, leading to injury or death.";
 export const PAPER_LEFT =
   "Oops! Looks like there is still paper left at the beach. Don't forget to pick up all the litter, including paper, to keep the beach clean and beautiful.\n\nKeep up the good work and continue collecting the garbage!\n\nPress SPACE to continue...";
 export const PLASTIC_LEFT =
