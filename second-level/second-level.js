@@ -24,7 +24,6 @@ export default class SecondLevel extends Phaser.Scene {
   pointsText = undefined;
   isMessageOn = false;
   shouldShowQuiz = false;
-  isQuizFinished = false;
   questions = undefined;
   explanations = undefined;
   shouldCheckGarbageExistence = true;
@@ -367,7 +366,6 @@ export default class SecondLevel extends Phaser.Scene {
             this.shouldShowQuiz = false;
             const score = `\n\nYour Score: ${this.points}`;
             this.showMessage(BEAT_GAME + score);
-            this.isQuizFinished = true;
             this.gameOver();
           }
         } else {
