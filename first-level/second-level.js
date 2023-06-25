@@ -224,7 +224,7 @@ import { EXPLANATIONS, QUESTIONS } from "../constants/quiz.js";
       //this.treeCutSound.play();
       this.noOfRecycled++;
       if (this.noOfRecycled >= 10) {
-        this.cleanBeach();
+        this.cleanedBeach();
       }
     } 
     removeplastic2(player, plastic2) {
@@ -234,7 +234,7 @@ import { EXPLANATIONS, QUESTIONS } from "../constants/quiz.js";
         plastic2.destroy();
         this.noOfRecycled++;
         if (this.noOfRecycled >= 10) {
-          this.cleanBeach();
+          this.cleanedBeach();
         }
     }
       
@@ -245,7 +245,7 @@ import { EXPLANATIONS, QUESTIONS } from "../constants/quiz.js";
         paper.destroy();
         this.noOfRecycled++;
         if (this.noOfRecycled >= 10) {
-          this.cleanBeach();
+          this.cleanedBeach();
         }
     } 
     removefood1(player, food1) {
@@ -255,7 +255,7 @@ import { EXPLANATIONS, QUESTIONS } from "../constants/quiz.js";
         food1.destroy();
         this.noOfRecycled++;
         if (this.noOfRecycled >= 10) {
-          this.cleanBeach();
+          this.cleanedBeach();
         }
     }
     removefood2(player, food2) {
@@ -264,7 +264,7 @@ import { EXPLANATIONS, QUESTIONS } from "../constants/quiz.js";
         }
         food2.destroy();
         if (this.noOfRecycled >= 10) {
-            this.cleanBeach();
+            this.cleanedBeach();
         }
     }  
 
