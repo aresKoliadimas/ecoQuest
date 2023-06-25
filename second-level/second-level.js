@@ -57,7 +57,7 @@ export default class SecondLevel extends Phaser.Scene {
     );
     this.load.tilemapTiledJSON(
       "secondLevelTilemap",
-      "second-level/assets/images/secondLevelTilemap1.json"
+      "second-level/assets/images/secondLevelTilemap.json"
     );
     this.load.image("plastic1", "second-level/assets/images/plastic1.png");
     this.load.image("plastic2", "second-level/assets/images/plastic2.png");
@@ -65,6 +65,9 @@ export default class SecondLevel extends Phaser.Scene {
     this.load.image("food2", "second-level/assets/images/food2.png");
     this.load.image("paper", "second-level/assets/images/paper.png");
     this.load.image("bin", "second-level/assets/images/bin1.png");
+    this.load.image("nuts", "second-level/assets/images/nuts.png");
+    this.load.image("lefttree", "second-level/assets/images/lefttree.png");
+    this.load.image("righttree", "second-level/assets/images/righttree.png");
     this.load.audio("correctEffect", "first-level/assets/sounds/correct.mp3");
     this.load.audio("wrongEffect", "first-level/assets/sounds/wrong.mp3");
     this.load.atlas("player", "shared/player.png", "shared/player_atlas.json");
@@ -92,9 +95,36 @@ export default class SecondLevel extends Phaser.Scene {
     );
 
     secondLevelTilemap.createLayer("ground", secondLevelTileset, 0, 0);
-    //groundLayer.setCollisionProperty({collides: true});
     secondLevelTilemap.createLayer("trees", secondLevelTileset, 0, 0);
-    //treesLayer.setCollisionProperty({collides: true});
+    
+    const nuts = this.physics.add.staticGroup();
+    const nutsLayer = secondLevelTilemap.getObjectLayer("nuts");
+    nutsLayer.objects.forEach((nutsObj) => {
+      const nut = nuts.create(nutsObj.x, nutsObj.y, "nuts");
+      nut.alpha = 0;
+      nut.setOrigin(0, 0); 
+    });
+    this.physics.world.enable(nuts);
+
+      
+    const lefttree = this.physics.add.staticGroup();
+    const lefttreeLayer = secondLevelTilemap.getObjectLayer("lefttree");
+    lefttreeLayer.objects.forEach((lefttreeObj) => {
+      const tree = lefttree.create(lefttreeObj.x, lefttreeObj.y - 64, "lefttree");
+      tree.setSize(32, 64);
+      tree.setOrigin(0, 0);
+    });
+    this.physics.world.enable(lefttree);
+
+    const righttree = this.physics.add.staticGroup();
+    const righttreeLayer = secondLevelTilemap.getObjectLayer("righttree");
+    righttreeLayer.objects.forEach((righttreeObj) => {
+      const tree = righttree.create(righttreeObj.x, righttreeObj.y - 64, "righttree");
+      tree.setSize(32, 64);
+      tree.setOrigin(0, 0);
+    });
+    this.physics.world.enable(righttree);
+    
 
     const plastic1 = this.physics.add.staticGroup();
     const plastic1Layer = secondLevelTilemap.getObjectLayer("plastic1");
@@ -159,6 +189,28 @@ export default class SecondLevel extends Phaser.Scene {
       "townsfolk_f_idle_1"
     );
     this.player.setCollideWorldBounds(true);
+
+    this.physics.add.collider(
+      this.player,
+      lefttree,
+      undefined,
+      undefined,
+      this
+    );
+    this.physics.add.collider(
+      this.player,
+      righttree,
+      undefined,
+      undefined,
+      this
+    );
+    this.physics.add.collider(
+      this.player,
+      nuts,
+      undefined,
+      undefined,
+      this
+    );
 
     this.physics.add.collider(
       this.player,
