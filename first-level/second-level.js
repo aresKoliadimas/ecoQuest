@@ -1,12 +1,18 @@
 import {
-    ROCK_UNSUSTAINABLE,
-    CONCRETE_UNSUSTAINABLE,
-    BUILD_HOUSE,
-  } from "../constants/messages.js";
+    LEAVE_POLUTED,
+    CLEAN_BEACH,
+    CLEAN,
+    CONGRATS,
+    WRONG_ANSWER,
+    CORRECT_ANSWER,
+    MUST_CLEAN_BEACH,
+} from "../constants/messages.js";
+import { EXPLANATIONS, QUESTIONS } from "../constants/quiz.js";
   
   export default class SecondLevel extends Phaser.Scene {
     cursors = null;
     spacebar = null;
+    isBeachClean = false;
     houseBuilt = false;
     allowRecycle = false;
     cutTrees = 0;
@@ -19,6 +25,8 @@ import {
   
     constructor() {
       super("secondLevel");
+      this.questions = QUESTIONS;
+      this.explanations = EXPLANATIONS;
     }
     
     preload() {
@@ -113,11 +121,18 @@ import {
       );
       this.player.setCollideWorldBounds(true);
   
-     this.physics.add.collider(this.player, plastic1, this.removeplastic1, null, this);
+    
      this.physics.add.collider(
         this.player,
         plastic1,
         this.removeplastic1,
+        undefined,
+        this
+      );
+      this.physics.add.collider(
+        this.player,
+        plastic2,
+        this.removeplastic2,
         undefined,
         this
       );
@@ -201,27 +216,15 @@ import {
       this.player.setVelocityY(velocityY * 160);
     }
   
-    removeTree(player, tree) {
-        if (!this.allowBuild) {
-          return;
-        }
-        tree.destroy();
-        this.treeCutSound.play();
-        this.noOfCutTrees++;
-    
-        if (this.noOfCutTrees >= 10) {
-          this.buildHouseWithWood();
-        }
-      }
-     removeplastic1(player, plastic1) {
+    removeplastic1(player, plastic1) {
       if (!this.allowRecycle) {
         return;
       }
       plastic1.destroy();
-      this.treeCutSound.play();
-      this.noOfCutTrees++;
-      if (this.noOfCutTrees >= 10) {
-        this.buildHouseWithWood();
+      //this.treeCutSound.play();
+      this.noOfRecycled++;
+      if (this.noOfRecycled >= 10) {
+        this.cleanBeach();
       }
     } 
     removeplastic2(player, plastic2) {
@@ -229,86 +232,185 @@ import {
           return;
         }
         plastic2.destroy();
-        this.getplastic2 += 1;
-        this.points += 10;
-        this.pointsText.setText("Points: " + this.points);
-      }
+        this.noOfRecycled++;
+        if (this.noOfRecycled >= 10) {
+          this.cleanBeach();
+        }
+    }
       
-      removepaper(player, paper) {
+    removepaper(player, paper) {
         if (!this.allowRecycle) {
           return;
         }
         paper.destroy();
-        this.paper += 1;
-        this.points += 10;
-        this.pointsText.setText("Points: " + this.points);
-      } 
-      removefood1(player, food1) {
+        this.noOfRecycled++;
+        if (this.noOfRecycled >= 10) {
+          this.cleanBeach();
+        }
+    } 
+    removefood1(player, food1) {
         if (!this.allowRecycle) {
           return;
         }
         food1.destroy();
-        this.food1 += 1;
-        this.points += 10;
-        this.pointsText.setText("Points: " + this.points);
-      } 
-      removefood2(player, food2) {
+        this.noOfRecycled++;
+        if (this.noOfRecycled >= 10) {
+          this.cleanBeach();
+        }
+    }
+    removefood2(player, food2) {
         if (!this.allowRecycle) {
           return;
         }
         food2.destroy();
-        this.food2 += 1;
-        this.points += 10;
-        this.pointsText.setText("Points: " + this.points);
-      } 
+        if (this.noOfRecycled >= 10) {
+            this.cleanBeach();
+        }
+    }  
+
   
-    showBuildPopup() {
-      const selectedMaterial = window.prompt(BUILD_HOUSE);
+    showRecyclePopup() {
+        if (this.isBeachClean) {
+            return;
+          }
+
+        const selectedAction = window.prompt(CLEAN_BEACH);
   
-      if (selectedMaterial !== null) {
-        const material = selectedMaterial.toLowerCase();
+        if (selectedAction !== null) {
+            const action = selectedAction.toLowerCase();
   
-        switch (material) {
-          case "wood":
+        switch (action) {
+          case "clean":
             this.allowRecycle = true;
-            this.buildHouseWithWood();
-            break;
-          case "rock":
-            this.deductPointsAndShowText(ROCK_UNSUSTAINABLE);
-            break;
-          case "concrete":
-            this.deductPointsAndShowText(CONCRETE_UNSUSTAINABLE);
+            this.showMessage(CLEAN);
+          break;;
+          case "leave_poluted":
+            this.deductPointsAndShowText(LEAVE_POLUTED);
+            if (!this.isMessageOn) {
+                this.cleanBeach();
+              }
             break;
           default:
             break;
         }
       }
     }
-  
-   
-  
-    deductPointsAndShowText(message) {
-      this.points = Math.max(this.points - 5, 0);
-      this.pointsText.setText("Points: " + this.points);
-      this.showMessage(message);
-    }
-  
-    showMessage(message) {
-      const messageText = this.add.text(
-        this.cameras.main.centerX,
-        this.cameras.main.centerY,
-        message,
-        {
-          fontSize: "24px",
-          fill: "#ffffff",
+    cleanBeach() {
+        this.updateScore(100);
+        this.isBeachClean = true;
+        this.allowRecycle = false;
+        //TI THELO NA KANEI ?
+        if (this.houseLayer.objects.length > 0) {
+          this.shouldShowQuiz = !this.shouldShowQuiz;
+          this.showQuiz();
         }
-      );
-      messageText.setOrigin(0.5);
-      messageText.setVisible(true);
     }
-  
-    moveToNextLevel() {
-      // TODO: Proceed to the next level or trigger any required actions
-    }
-  }
-  
+
+    showQuiz() {
+        // Iterate over the questions
+        let currentQuestionIndex = 0;
+        const showNextQuestion = () => {
+          const currentQuestion = this.questions[currentQuestionIndex];
+    
+          // Construct the prompt message with the question and options
+          let promptMessage = `${currentQuestion.question}\n`;
+          const options = this.shuffle(
+            currentQuestion.answers.wrong.concat(currentQuestion.answers.correct)
+          );
+    
+          for (let i = 0; i < options.length; i++) {
+            promptMessage += `${options[i]}\n`;
+          }
+    
+          const playerAnswer = window.prompt(promptMessage);
+    
+          if (playerAnswer !== null) {
+            const formattedAnswer = playerAnswer.trim().toLowerCase();
+            if (formattedAnswer === currentQuestion.answers.correct.toLowerCase()) {
+              this.correctEffect.play();
+              window.alert(
+                `${CORRECT_ANSWER}\n\n${this.explanations[formattedAnswer]}`
+              );
+              this.updateScore(50);
+              currentQuestionIndex++;
+    
+              if (currentQuestionIndex < this.questions.length) {
+                // Show the next question
+                showNextQuestion();
+              } else {
+                // All questions answered correctly
+                this.shouldShowQuiz = false;
+                this.showMessage(CONGRATS);
+                this.isQuizFinished = true;
+              }
+            } else {
+              // Incorrect answer
+              this.wrongEffect.play();
+              window.alert(WRONG_ANSWER);
+              showNextQuestion();
+            }
+          }
+        };
+    
+        // Start showing questions
+        if (this.shouldShowQuiz) {
+          showNextQuestion();
+        }
+      }
+      shuffle(array) {
+        let currentIndex = array.length,
+          randomIndex;
+    
+        // While there remain elements to shuffle.
+        while (currentIndex != 0) {
+          // Pick a remaining element.
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex--;
+    
+          // And swap it with the current element.
+          [array[currentIndex], array[randomIndex]] = [
+            array[randomIndex],
+            array[currentIndex],
+          ];
+        }
+    
+        return array;
+      }
+    
+      showMessage(message) {
+        const messageText = this.add.text(50, 100, message, {
+          backgroundColor: "#000",
+          fixedWidth: 400,
+          wordWrap: { width: 400 },
+        });
+        this.isMessageOn = !this.isMessageOn;
+    
+        // Disable player input
+        this.player.setVelocity(0, 0);
+        this.player.body.moves = false;
+    
+        const dismissMessage = () => {
+          messageText.destroy();
+          this.input.keyboard.off("keydown-SPACE", dismissMessage);
+    
+          // Re-enable player input
+          this.player.body.moves = true;
+          this.isMessageOn = !this.isMessageOn;
+        };
+    
+        this.input.keyboard.on("keydown-SPACE", dismissMessage);
+      }
+    //FINISH THE GAME
+      moveToNextLevel() {
+        if (!this.isHouseBuilt) {
+          this.showMessage(MUST_BUILD_HOUSE);
+          this.player.setPosition(256, 256);
+          return;
+        }
+        this.scene.start("secondLevel", { points: this.points });
+      }
+}
+
+    
+   
+      
