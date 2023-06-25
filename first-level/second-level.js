@@ -68,7 +68,7 @@ import { EXPLANATIONS, QUESTIONS } from "../constants/quiz.js";
       const plastic1 = this.physics.add.staticGroup();
       const plastic1Layer = secondLevelTilemap.getObjectLayer("plastic1");
       plastic1Layer.objects.forEach((plastic1Obj) => {
-        const plastic = plastic1.create(plastic1Obj.x-32, plastic1Obj.y-32, "plastic1");
+        const plastic = plastic1.create(plastic1Obj.x, plastic1Obj.y-32, "plastic1");
         plastic.setOrigin(0, 0);
       });
       this.physics.world.enable(plastic1); 
@@ -76,15 +76,15 @@ import { EXPLANATIONS, QUESTIONS } from "../constants/quiz.js";
       const plastic2 = this.physics.add.staticGroup();
       const plastic2Layer = secondLevelTilemap.getObjectLayer("plastic2");
       plastic2Layer.objects.forEach((plastic2Obj) => {
-        const plastics = plastic2.create(plastic2Obj.x, plastic2Obj.y, "plastic2");
-        plastic2.setOrigin(0, 0);
+        const plastics = plastic2.create(plastic2Obj.x, plastic2Obj.y-32, "plastic2");
+        plastics.setOrigin(0, 0);
       });
       this.physics.world.enable(plastic2); 
       
       const paper = this.physics.add.staticGroup();
       const paperLayer = secondLevelTilemap.getObjectLayer("paper");
       paperLayer.objects.forEach((paperObj) => {
-        const papers = paper.create(paperObj.x, paperObj.y, "paper");
+        const papers = paper.create(paperObj.x, paperObj.y-32, "paper");
         papers.setOrigin(0, 0);
       });
       this.physics.world.enable(paper);
@@ -92,7 +92,7 @@ import { EXPLANATIONS, QUESTIONS } from "../constants/quiz.js";
       const food1 = this.physics.add.staticGroup();
       const food1Layer = secondLevelTilemap.getObjectLayer("food1");
       food1Layer.objects.forEach((food1Obj) => {
-        const food = food1.create(food1Obj.x, food1Obj.y, "food1");
+        const food = food1.create(food1Obj.x, food1Obj.y-32, "food1");
         food1.setOrigin(0, 0);
       });
       this.physics.world.enable(food1);
@@ -100,7 +100,7 @@ import { EXPLANATIONS, QUESTIONS } from "../constants/quiz.js";
       const food2 = this.physics.add.staticGroup();
       const food2Layer = secondLevelTilemap.getObjectLayer("food2");
       food2Layer.objects.forEach((food2Obj) => {
-        const foods = plastic2.create(food2Obj.x, food2Obj.y, "food2");
+        const foods = plastic2.create(food2Obj.x, food2Obj.y-32, "food2");
         food2.setOrigin(0, 0);
       });
       this.physics.world.enable(food2);
@@ -108,7 +108,7 @@ import { EXPLANATIONS, QUESTIONS } from "../constants/quiz.js";
       const bin = this.physics.add.staticGroup();
       const binLayer = secondLevelTilemap.getObjectLayer("bin");
       binLayer.objects.forEach((binObj) => {
-        const bins = bin.create(binObj.x, binObj.y, "bin");
+        const bins = bin.create(binObj.x, binObj.y-32, "bin");
         bin.setOrigin(0, 0);
       });
       this.physics.world.enable(bin);
