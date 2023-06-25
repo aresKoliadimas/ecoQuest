@@ -8,7 +8,7 @@ import {
   CORRECT_ANSWER,
   MUST_BUILD_HOUSE,
 } from "../constants/messages.js";
-import { EXPLANATIONS, QUESTIONS } from "../constants/quiz.js";
+import { EXPLANATIONS, QUESTIONS } from "../constants/quiz1.js";
 
 export default class FirstLevel extends Phaser.Scene {
   cursors = undefined;
