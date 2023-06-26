@@ -65,5 +65,5 @@ This project is licensed under the [MIT License](LICENSE).
 
 ## Contact
 
-If you have any questions or suggestions regarding ecoQuest, feel free to reach out to me at your-email@example.com.
+If you have any questions or suggestions regarding ecoQuest, feel free to reach out to me at ariskoliadimas@gmail.com.
 
